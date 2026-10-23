@@ -142,6 +142,11 @@ export default function Editor() {
   }, [P]);
   const textEditRef = useRef<TextEdit | null>(null);
   textEditRef.current = textEdit;
+  const textOpenedAt = useRef(0);
+  useEffect(() => {
+    if (textEdit) textOpenedAt.current = Date.now();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [!!textEdit]);
 
   useEffect(redraw, [anns, selected, textEdit, redraw]);
 
@@ -317,9 +322,11 @@ export default function Editor() {
 
   const onPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (e.button !== 0 && e.pointerType === "mouse") return;
+    // stop the browser from moving focus (which would close a label being typed)
+    e.preventDefault();
     const p = local(e);
     const ll = U(p);
-    if (textEdit) {
+    if (textEditRef.current) {
       commitText();
       return;
     }
@@ -847,7 +854,9 @@ export default function Editor() {
           />
           {textEdit && (
             <textarea
-              autoFocus
+              ref={(el) => {
+                if (el && document.activeElement !== el) setTimeout(() => el.focus(), 0);
+              }}
               className="textedit"
               style={{
                 left: textEdit.x,
@@ -867,7 +876,11 @@ export default function Editor() {
                 }
                 if (e.key === "Escape") setTextEdit(null);
               }}
-              onBlur={commitText}
+              onBlur={() => {
+                // ignore the blur that can fire right as the box opens
+                if (Date.now() - textOpenedAt.current < 300) return;
+                commitText();
+              }}
             />
           )}
           {tool === "polygon" && <div className="hint">Click to add points · double-click or Enter to finish</div>}

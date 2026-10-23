@@ -15,7 +15,7 @@ Look around a map, draw on it, drop labels and symbols, and export a PNG or JPG 
 `H` move map · `V` select · `P` pen · `L` line · `A` arrow · `R` rectangle · `O` ellipse · `G` area · `T` label · `S` symbol · `E` eraser · `Del` delete · `Ctrl/Cmd+Z` undo · `Shift` square/circle
 
 ## Google Maps tiles
-Without configuration the app uses free OpenStreetMap/CARTO and Esri tiles.
+Without configuration the app uses free Esri tiles.
 To use Google's tiles, create an API key with the **Map Tiles API** enabled and set it in Vercel:
 
 ```

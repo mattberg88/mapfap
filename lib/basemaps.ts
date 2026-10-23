@@ -65,33 +65,35 @@ async function googleLayers(id: BaseId): Promise<{ layers: L.TileLayer[]; attrib
 }
 
 // ---------- Free fallback (no key needed) ----------
-const CARTO = "© OpenStreetMap contributors © CARTO";
 const ESRI = "Imagery © Esri, Maxar, Earthstar Geographics";
+const ESRI_MAP = "© Esri, HERE, Garmin, USGS, OpenStreetMap contributors";
 function freeLayers(id: BaseId): { layers: L.TileLayer[]; attribution: string } {
-  const carto = (style: string) =>
-    L.tileLayer(`https://{s}.basemaps.cartocdn.com/rastertiles/${style}/{z}/{x}/{y}{r}.png`, {
-      ...common,
-      subdomains: "abcd",
-      maxNativeZoom: 20,
-      attribution: CARTO,
-    });
   const esri = (svc: string, maxNative = 19) =>
     L.tileLayer(`https://server.arcgisonline.com/ArcGIS/rest/services/${svc}/MapServer/tile/{z}/{y}/{x}`, {
       ...common,
       maxNativeZoom: maxNative,
-      attribution: ESRI,
     });
   switch (id) {
     case "satellite":
       return { layers: [esri("World_Imagery")], attribution: ESRI };
     case "hybrid":
-      return { layers: [esri("World_Imagery"), carto("voyager_only_labels")], attribution: `${ESRI} ${CARTO}` };
+      return {
+        layers: [
+          esri("World_Imagery"),
+          esri("Reference/World_Transportation"),
+          esri("Reference/World_Boundaries_and_Places"),
+        ],
+        attribution: `${ESRI}, HERE, Garmin`,
+      };
     case "terrain":
-      return { layers: [esri("World_Topo_Map")], attribution: "© Esri, HERE, Garmin, USGS, OpenStreetMap" };
+      return { layers: [esri("World_Topo_Map")], attribution: ESRI_MAP };
     case "light":
-      return { layers: [carto("light_all")], attribution: CARTO };
+      return {
+        layers: [esri("Canvas/World_Light_Gray_Base", 16), esri("Canvas/World_Light_Gray_Reference", 16)],
+        attribution: ESRI_MAP,
+      };
     default:
-      return { layers: [carto("voyager")], attribution: CARTO };
+      return { layers: [esri("World_Street_Map")], attribution: ESRI_MAP };
   }
 }
 

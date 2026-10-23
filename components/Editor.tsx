@@ -1048,7 +1048,7 @@ export default function Editor() {
             </p>
             {!usingGoogle && (
               <p className="note">
-                Using free OpenStreetMap / Esri maps. Add a Google Maps key (<code>NEXT_PUBLIC_GOOGLE_MAPS_API_KEY</code>) to switch
+                Using free Esri / OpenStreetMap maps. Add a Google Maps key (<code>NEXT_PUBLIC_GOOGLE_MAPS_API_KEY</code>) to switch
                 to Google tiles.
               </p>
             )}

@@ -718,7 +718,9 @@ export default function Editor() {
         out.toBlob(res, exp.format === "png" ? "image/png" : "image/jpeg", exp.quality)
       );
       if (!blob) throw new Error("empty");
-      const stamp = new Date().toISOString().slice(0, 16).replace(/[:T]/g, "-");
+      const d = new Date();
+      const pad = (n: number) => String(n).padStart(2, "0");
+      const stamp = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}`;
       const name = (exp.title.trim() || "map").replace(/[^\w-]+/g, "-").toLowerCase();
       download(blob, `${name}-${stamp}.${exp.format === "png" ? "png" : "jpg"}`);
       setShowExport(false);
@@ -855,7 +857,7 @@ export default function Editor() {
           {textEdit && (
             <textarea
               ref={(el) => {
-                if (el && document.activeElement !== el) setTimeout(() => el.focus(), 0);
+                if (el && document.activeElement !== el) el.focus();
               }}
               className="textedit"
               style={{

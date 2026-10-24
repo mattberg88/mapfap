@@ -12,6 +12,17 @@ function hexA(hex: string, a: number) {
   return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
 }
 
+/** True for light colors (white, yellow…) that need a dark outline to read on a map. */
+export function isLight(hex: string) {
+  const h = hex.replace("#", "");
+  const n = parseInt(h.length === 3 ? h.split("").map((c) => c + c).join("") : h, 16);
+  const r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+  return 0.299 * r + 0.587 * g + 0.114 * b > 150;
+}
+export function haloColor(hex: string) {
+  return isLight(hex) ? "rgba(17,24,39,0.92)" : "rgba(255,255,255,0.95)";
+}
+
 function strokeStyle(ctx: CanvasRenderingContext2D, a: Ann) {
   ctx.strokeStyle = a.color;
   ctx.lineWidth = a.width;
@@ -175,7 +186,7 @@ export function drawAnn(ctx: CanvasRenderingContext2D, a: Ann, P: Project, draft
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       if (a.textStyle === "box") {
-        ctx.fillStyle = "rgba(255,255,255,0.94)";
+        ctx.fillStyle = isLight(a.color) ? "rgba(17,24,39,0.9)" : "rgba(255,255,255,0.94)";
         ctx.strokeStyle = a.color;
         ctx.lineWidth = Math.max(1.5, fs / 12);
         ctx.beginPath();
@@ -186,8 +197,8 @@ export function drawAnn(ctx: CanvasRenderingContext2D, a: Ann, P: Project, draft
       b.lines.forEach((line, i) => {
         const ly = b.cy - ((b.lines.length - 1) * b.lh) / 2 + i * b.lh;
         if (a.textStyle === "halo" || !a.textStyle) {
-          ctx.strokeStyle = "rgba(255,255,255,0.95)";
-          ctx.lineWidth = Math.max(3, fs / 4);
+          ctx.strokeStyle = haloColor(a.color);
+          ctx.lineWidth = Math.max(4, fs / 3.5);
           ctx.lineJoin = "round";
           ctx.strokeText(line, b.cx, ly);
         }

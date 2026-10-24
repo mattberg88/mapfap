@@ -78,8 +78,17 @@ input, textarea { font: inherit; }
 .hint { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); z-index: 650; background: rgba(20,22,26,.85); color: #fff; font-size: 13px; padding: 7px 12px; border-radius: 999px; pointer-events: none; white-space: nowrap; }
 .toast { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 700; background: #111; color: #fff; padding: 10px 14px; border-radius: 8px; font-size: 13px; max-width: 90%; box-shadow: 0 8px 24px rgba(0,0,0,.4); }
 
-.textedit { position: absolute; z-index: 800; transform: translate(-50%, -50%); background: rgba(255,255,255,.95);
-  border: 2px solid var(--sel); border-radius: 6px; outline: 0; padding: 4px 8px; resize: none; text-align: center; min-width: 120px; line-height: 1.2; }
+.textedit { position: absolute; z-index: 800; transform: translate(-50%, -50%); background: transparent;
+  border: 1.5px dashed rgba(255,255,255,.85); box-shadow: 0 0 0 1px rgba(0,0,0,.45); border-radius: 6px; outline: 0;
+  padding: 2px 8px; resize: none; text-align: center; line-height: 1.2; overflow: hidden; max-width: 80vw;
+  font-family: inherit; caret-color: currentColor;
+  /* same contrasting outline the finished label gets */
+  text-shadow:
+    var(--halo-w) 0 0 var(--halo), calc(var(--halo-w) * -1) 0 0 var(--halo),
+    0 var(--halo-w) 0 var(--halo), 0 calc(var(--halo-w) * -1) 0 var(--halo),
+    calc(var(--halo-w) * .7) calc(var(--halo-w) * .7) 0 var(--halo), calc(var(--halo-w) * -.7) calc(var(--halo-w) * .7) 0 var(--halo),
+    calc(var(--halo-w) * .7) calc(var(--halo-w) * -.7) 0 var(--halo), calc(var(--halo-w) * -.7) calc(var(--halo-w) * -.7) 0 var(--halo); }
+.textedit::placeholder { color: currentColor; opacity: .55; }
 
 /* ---------- panel ---------- */
 .panel { position: relative; flex: none; width: 248px; background: var(--bg); border-left: 1px solid var(--line); z-index: 1000; transition: width .18s ease; }

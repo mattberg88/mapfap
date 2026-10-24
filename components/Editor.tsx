@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import L from "leaflet";
 import type { Ann, LL, Style, Tool } from "@/lib/types";
 import { uid } from "@/lib/types";
-import { drawAnn, drawSelection, hitTest, type XY } from "@/lib/draw";
+import { drawAnn, drawSelection, haloColor, hitTest, type XY } from "@/lib/draw";
 import { BASES, type BaseId, makeBase } from "@/lib/basemaps";
 import { SYMBOLS, EMOJI_PRESETS } from "@/lib/symbols";
 import { Icon } from "./Icons";
@@ -866,6 +866,9 @@ export default function Editor() {
                 color: style.color,
                 fontSize: style.fontSize,
                 fontWeight: style.bold ? 700 : 500,
+                ["--halo" as string]: haloColor(style.color),
+                ["--halo-w" as string]: `${Math.max(2, style.fontSize / 7)}px`,
+                width: `${Math.max(4, ...textEdit.value.split("\n").map((l) => l.length + 1)) * style.fontSize * 0.62 + 24}px`,
               }}
               value={textEdit.value}
               rows={Math.max(1, textEdit.value.split("\n").length)}
